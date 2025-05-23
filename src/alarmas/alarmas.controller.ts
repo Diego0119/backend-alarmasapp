@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get } from '@nestjs/common';
+import { Body, Controller, Post, Get, Patch } from '@nestjs/common';
 import { CreateAlarmDto } from './Dto/create-alarm.dto';
 import { UpdateAlarmDto } from './Dto/change-state.dto';
 import { AlarmasService } from './alarmas.service';
@@ -18,4 +18,10 @@ export class AlarmasController {
         console.log("Entro a get alarms");
         return this.alarmService.getAlarms();
     }
+
+    @Patch('change-status')
+    async changeState(@Body() updateAlarmDto: UpdateAlarmDto) {
+        return this.alarmService.changeStatus(updateAlarmDto);
+    }
+
 }

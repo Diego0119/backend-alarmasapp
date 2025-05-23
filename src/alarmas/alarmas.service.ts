@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAlarmDto } from './Dto/create-alarm.dto';
 import { Alarmas } from './alarm.entity';
+import { UpdateAlarmDto } from './Dto/change-state.dto';
 
 @Injectable()
 export class AlarmasService {
@@ -27,4 +28,24 @@ export class AlarmasService {
     async getAlarms(): Promise<Alarmas[]> {
         return this.alarmRepository.find();
     }
+
+    async changeStatus(updateAlarmDto: UpdateAlarmDto): Promise<any> {
+        const { id_alarma, estado_alarma } = updateAlarmDto;
+
+        const alarma = await this.alarmRepository.findOne({ where: { id_alarma } });
+
+        if (!alarma) {
+            throw new Error('Alarma no encontrada');
+        }
+
+        alarma.estado_alarma = estado_alarma;
+
+        await this.alarmRepository.save(alarma);
+
+        return {
+            message: 'Estado de la alarma actualizado correctamente',
+            data: alarma,
+        };
+    }
+
 }

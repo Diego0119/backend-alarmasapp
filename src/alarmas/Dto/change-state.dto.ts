@@ -1,7 +1,9 @@
-import { IsBooleanString } from 'class-validator';
+import { IsBoolean, IsNumber } from 'class-validator';
 
 export class UpdateAlarmDto {
+    @IsNumber()
+    id_alarma: number;
 
-    @IsBooleanString()
-    readonly isOn: Boolean;
+    @IsBoolean()
+    estado_alarma: boolean;
 }

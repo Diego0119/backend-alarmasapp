@@ -3,6 +3,7 @@ import { CreateUserDto } from './Dto/create-user.dto';
 import { BadRequestException } from '@nestjs/common';
 import { LoginUserDto } from './Dto/login-user.dto';
 import { UsersService } from '../users/users.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -31,16 +32,22 @@ export class AuthService {
     async login(loginUserDto: LoginUserDto) {
         const { email, password } = loginUserDto;
 
-        const user_password = '1111';
+        const user = await this.usersService.findByEmail(email);
+        if (!user) {
+            throw new UnauthorizedException('Usuario no encontrado');
+        }
 
-        if (user_password != password) {
-
-            throw new UnauthorizedException('Las contraseñas no coinciden');
+        const passwordMatches = await bcrypt.compare(password, user.contrasena);
+        if (!passwordMatches) {
+            throw new UnauthorizedException('Contraseña incorrecta');
         }
 
         return {
-            message: 'Login correcto'
+            message: 'Login correcto',
+            user: {
+                id: user.id_usuario,
+                correo: user.correo,
+            },
         }
-
     }
 }

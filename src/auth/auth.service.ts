@@ -2,9 +2,12 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './Dto/create-user.dto';
 import { BadRequestException } from '@nestjs/common';
 import { LoginUserDto } from './Dto/login-user.dto';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
+    constructor(private usersService: UsersService) { }
+
     async register(createUserDto: CreateUserDto): Promise<any> {
         const { email, password, confirmedPassword } = createUserDto;
 
@@ -12,11 +15,16 @@ export class AuthService {
             throw new BadRequestException('Las contraseñas no coinciden');
         }
 
-        // insertar al user en la base de datos
+        const existingUser = await this.usersService.findByEmail(email);
+        if (existingUser) {
+            throw new BadRequestException('El correo ya está registrado');
+        }
+
+        const user = await this.usersService.create(createUserDto);
 
         return {
             message: 'Usuario registrado exitosamente',
-            user: { email },
+            user: { correo: user.correo },
         };
     }
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Get } from '@nestjs/common';
 import { CreateAlarmDto } from './Dto/create-alarm.dto';
 import { UpdateAlarmDto } from './Dto/change-state.dto';
 import { AlarmasService } from './alarmas.service';
@@ -11,5 +11,11 @@ export class AlarmasController {
     async register(@Body() createAlarmDto: CreateAlarmDto) {
         console.log('Body recibido:', createAlarmDto);
         return this.alarmService.addAlarm(createAlarmDto);
+    }
+
+    @Get('get-alarms')
+    async getAlarms() {
+        console.log("Entro a get alarms");
+        return this.alarmService.getAlarms();
     }
 }

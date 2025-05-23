@@ -12,9 +12,9 @@ import { AlarmasModule } from './alarmas/alarmas.module';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'denexos.cl',
+      database: 'alarmasapp',
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false, // si esta en true typeorm intenta crear las tablas automaticamente
     }),
     UsersModule,
     AuthModule,

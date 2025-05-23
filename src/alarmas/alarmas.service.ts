@@ -1,21 +1,27 @@
 import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAlarmDto } from './Dto/create-alarm.dto';
-import { UpdateAlarmDto } from './Dto/change-state.dto';
+import { Alarmas } from './alarm.entity';
 
 @Injectable()
 export class AlarmasService {
+    constructor(
+        @InjectRepository(Alarmas)
+        private alarmRepository: Repository<Alarmas>,
+    ) { }
+
     async addAlarm(createAlarmDto: CreateAlarmDto): Promise<any> {
-        const { name, dayOfWeek, alarmTime, isOn } = createAlarmDto;
+        const alarma = this.alarmRepository.create({
+            id_usuario: createAlarmDto.id_usuario,
+            id_servicio: createAlarmDto.id_servicio,
+            fecha_alarma: new Date(createAlarmDto.fecha_alarma),
+            hora: createAlarmDto.hora,
+            mensaje: createAlarmDto.mensaje,
+            estado_alarma: createAlarmDto.estado_alarma,
+        });
 
-        // insertar alarma en la base de datos
-
-        return {
-            message: 'Datos de la nueva alarma a crear',
-            name: { name },
-            dayOfWeek: { dayOfWeek },
-            alarmTime: { alarmTime },
-            isOn: { isOn },
-        };
+        return this.alarmRepository.save(alarma);
     }
 
     async getAlarms() {

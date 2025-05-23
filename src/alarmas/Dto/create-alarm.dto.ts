@@ -1,16 +1,27 @@
-import { IsString, IsDate, IsBooleanString } from 'class-validator';
+import {
+    IsInt,
+    IsDateString,
+    IsString,
+    IsBoolean,
+    IsOptional,
+} from 'class-validator';
 
 export class CreateAlarmDto {
+    @IsInt()
+    readonly id_usuario: number;
+
+    @IsInt()
+    readonly id_servicio: number;
+
+    @IsDateString()
+    readonly fecha_alarma: string;
 
     @IsString()
-    readonly name: string;
+    readonly hora: string;
 
     @IsString()
-    readonly dayOfWeek: string;
+    readonly mensaje: string;
 
-    @IsDate()
-    readonly alarmTime: Date;
-
-    @IsBooleanString()
-    readonly isOn: Boolean;
+    @IsBoolean()
+    readonly estado_alarma: boolean;
 }

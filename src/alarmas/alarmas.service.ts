@@ -40,12 +40,7 @@ export class AlarmasService {
 
         alarma.estado_alarma = estado_alarma;
 
-        await this.alarmRepository.save(alarma);
-
-        return {
-            message: 'Estado de la alarma actualizado correctamente',
-            data: alarma,
-        };
+        return this.alarmRepository.save(alarma);
     }
 
 }

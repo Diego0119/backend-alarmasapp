@@ -26,7 +26,9 @@ export class AlarmasService {
     }
 
     async getAlarms(): Promise<Alarmas[]> {
-        return this.alarmRepository.find();
+        return this.alarmRepository.find({
+            relations: ['servicio'],
+        });
     }
 
     async changeStatus(updateAlarmDto: UpdateAlarmDto): Promise<any> {

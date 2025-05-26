@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Servicio } from 'src/servicio.entity';
 
 @Entity('Alarmas')
 export class Alarmas {
@@ -22,4 +23,9 @@ export class Alarmas {
 
     @Column({ name: 'estado_alarma', type: 'boolean' })
     estado_alarma: boolean;
+
+    @ManyToOne(() => Servicio, (servicio) => servicio.alarmas)
+    @JoinColumn({ name: 'id_servicio' })
+    servicio: Servicio;
+
 }

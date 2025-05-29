@@ -1,7 +1,8 @@
-import { Body, Controller, Post, Get, Put } from '@nestjs/common';
+import { Body, Controller, Post, Get, Put, Query } from '@nestjs/common';
 import { CreateAlarmDto } from './Dto/create-alarm.dto';
 import { UpdateAlarmDto } from './Dto/change-state.dto';
 import { AlarmasService } from './alarmas.service';
+import { BadRequestException } from '@nestjs/common';
 
 @Controller('alarmas')
 export class AlarmasController {
@@ -14,9 +15,16 @@ export class AlarmasController {
     }
 
     @Get('get-alarms')
-    async getAlarms() {
-        console.log("Entro a get alarms");
-        return this.alarmService.getAlarms();
+    async getAlarms(@Query('idUsuario') idUsuario: string) {
+        console.log("Entro a get alarms con idUsuario:", idUsuario);
+
+        const id = parseInt(idUsuario, 10);
+
+        if (isNaN(id)) {
+            throw new BadRequestException('El idUsuario proporcionado no es válido.');
+        }
+
+        return this.alarmService.getAlarmsByUser(id);
     }
 
     @Put('change-status')

@@ -31,6 +31,13 @@ export class AlarmasService {
         });
     }
 
+    async getAlarmsByUser(idUsuario: number): Promise<Alarmas[]> {
+        return this.alarmRepository.find({
+            where: { id_usuario: idUsuario },
+            relations: ['servicio'],
+        });
+    }
+
     async changeStatus(updateAlarmDto: UpdateAlarmDto): Promise<any> {
         const { id_alarma, estado_alarma } = updateAlarmDto;
 

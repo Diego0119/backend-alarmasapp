@@ -4,10 +4,14 @@ import { BadRequestException } from '@nestjs/common';
 import { LoginUserDto } from './Dto/login-user.dto';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-    constructor(private usersService: UsersService) { }
+    constructor(
+        private usersService: UsersService,
+        private jwtService: JwtService,
+    ) { }
 
     async register(createUserDto: CreateUserDto): Promise<any> {
         const { email, password, confirmedPassword } = createUserDto;
@@ -42,12 +46,17 @@ export class AuthService {
             throw new UnauthorizedException('Contraseña incorrecta');
         }
 
+        const payload = { sub: user.id_usuario, email: user.correo };
+
+        const token = this.jwtService.sign(payload);
+
         return {
             message: 'Login correcto',
+            token,
             user: {
                 id: user.id_usuario,
                 correo: user.correo,
             },
-        }
+        };
     }
 }

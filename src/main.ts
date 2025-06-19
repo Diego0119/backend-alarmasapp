@@ -8,15 +8,16 @@ async function bootstrap() {
 
   app.use(express.json());
 
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    transform: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   app.enableCors();
   await app.listen(3000);
 }
-
 
 bootstrap();

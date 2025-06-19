@@ -1,9 +1,9 @@
 import { IsEmail, IsString, MinLength } from 'class-validator';
 
 export class LoginUserDto {
-    @IsEmail()
-    readonly email: string;
+  @IsEmail()
+  readonly email: string;
 
-    @IsString()
-    readonly password: string;
+  @IsString()
+  readonly password: string;
 }

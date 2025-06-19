@@ -10,4 +10,4 @@ import { AlarmasController } from './alarmas.controller';
   controllers: [AlarmasController],
   exports: [AlarmasService],
 })
-export class AlarmasModule { }
+export class AlarmasModule {}

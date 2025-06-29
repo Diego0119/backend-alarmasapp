@@ -1,8 +1,21 @@
-import { Body, Controller, Post, Get, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Put,
+  Query,
+  Delete,
+  Param,
+  ParseIntPipe,
+  Request,
+  UseGuards,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateAlarmDto } from './Dto/create-alarm.dto';
 import { UpdateAlarmDto } from './Dto/change-state.dto';
 import { AlarmasService } from './alarmas.service';
-import { BadRequestException } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('alarmas')
 export class AlarmasController {
@@ -31,5 +44,16 @@ export class AlarmasController {
   async changeState(@Body() updateAlarmDto: UpdateAlarmDto) {
     console.log('Body en change status:', updateAlarmDto);
     return this.alarmService.changeStatus(updateAlarmDto);
+  }
+
+  @Delete('delete-alarma/:id')
+  @UseGuards(JwtAuthGuard)
+  async deleteAlarma(
+    @Param('id', ParseIntPipe) id: number,
+    @Request() req,
+  ): Promise<{ message: string }> {
+    const idUsuario = req.user.sub;
+    await this.alarmService.deleteAlarma(id, idUsuario);
+    return { message: 'Alarma eliminada exitosamente' };
   }
 }

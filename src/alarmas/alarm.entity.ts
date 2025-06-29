@@ -13,12 +13,6 @@ export class Alarmas {
   @PrimaryGeneratedColumn({ name: 'id_alarma' })
   id_alarma: number;
 
-  @Column({ name: 'id_usuario' })
-  id_usuario: number;
-
-  @Column({ name: 'id_servicio' })
-  id_servicio: number;
-
   @Column({ name: 'fecha_alarma', type: 'date' })
   fecha_alarma: Date;
 
@@ -35,7 +29,7 @@ export class Alarmas {
   @JoinColumn({ name: 'id_servicio' })
   servicio: Servicio;
 
-  @ManyToOne(() => Usuario, usuario => usuario.alarmas)
+  @ManyToOne(() => Usuario, (usuario) => usuario.alarmas)
   @JoinColumn({ name: 'id_usuario' })
   usuario: Usuario;
 }

@@ -1,4 +1,3 @@
-// src/pagos/entities/pagos.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Usuario } from '../../users/user.entity';
 import { Servicio } from '../../servicios/servicios.entity';

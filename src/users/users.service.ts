@@ -13,7 +13,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<Usuario> {
-    const salt = await bcrypt.genSalt(); // genera una cadena unica y se coloca en el hash para que cada hash sea unico
+    const salt = await bcrypt.genSalt(); 
     const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
 
     const user = this.usersRepository.create({

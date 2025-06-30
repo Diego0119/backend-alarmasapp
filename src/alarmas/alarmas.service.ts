@@ -18,8 +18,8 @@ export class AlarmasService {
 
   async addAlarm(createAlarmDto: CreateAlarmDto): Promise<any> {
     const alarma = this.alarmRepository.create({
-      id_usuario: createAlarmDto.id_usuario,
-      id_servicio: createAlarmDto.id_servicio,
+      usuario: { id_usuario: createAlarmDto.id_usuario },
+      servicio: { id_servicio: createAlarmDto.id_servicio },
       fecha_alarma: createAlarmDto.fecha_alarma,
       hora: createAlarmDto.hora,
       mensaje: createAlarmDto.mensaje,
@@ -37,7 +37,7 @@ export class AlarmasService {
 
   async getAlarmsByUser(idUsuario: number): Promise<Alarmas[]> {
     return this.alarmRepository.find({
-      where: { id_usuario: idUsuario },
+      where: { usuario: { id_usuario: idUsuario } },
       relations: ['servicio'],
     });
   }

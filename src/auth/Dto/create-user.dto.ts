@@ -3,7 +3,7 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { Expose } from 'class-transformer'; // 👈 importá esto
+import { Expose } from 'class-transformer'; 
 
 export class CreateUserDto {
   @IsEmail({}, { message: 'Se debe ingresar un correo válido.\n' })

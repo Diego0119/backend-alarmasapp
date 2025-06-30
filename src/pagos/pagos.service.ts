@@ -15,24 +15,51 @@ export class PagosService {
     private readonly alarmaRepository: Repository<Alarmas>,
   ) {}
 
-  async obtenerPagosYAlarmas(userId: number) {
+  async obtenerPagosYAlarmas(userId: number, mes?: number, anio?: number) {
     const pagos = await this.pagoRepository.find({
       where: { usuario: { id_usuario: userId } },
       relations: ['servicio'],
     });
-
-    console.log('Pagos:', pagos); 
 
     const alarmas = await this.alarmaRepository.find({
       where: { usuario: { id_usuario: userId }, estado_alarma: true },
       relations: ['servicio'],
     });
 
-    const serviciosPagados = new Set(pagos.map(p => p.servicio.id_servicio));
     const ahora = new Date();
 
+    // Filtrar pagos por mes/año si corresponde
+    const pagosFiltrados = pagos.filter(p => {
+      if (!mes || !anio) return true;
+      const fecha = new Date(p.fecha_pago);
+      return (
+        fecha.getMonth() + 1 === mes &&
+        fecha.getFullYear() === anio
+      );
+    });
+
+    // Extraer ID de servicios ya pagados en el mes/año seleccionado
+    const serviciosPagadosDelMes = new Set(
+      pagosFiltrados.map(p => p.servicio.id_servicio)
+    );
+
+    const pagosConvertidos = pagosFiltrados.map(p => ({
+      nombre_servicio: p.servicio.nombre_servicio,
+      fecha: p.fecha_pago,
+      monto: p.monto,
+      estado: p.estado_pago,
+      id_servicio: p.servicio.id_servicio,
+    }));
+
     const alarmasNoPagadas = alarmas
-      .filter(a => !serviciosPagados.has(a.servicio.id_servicio))
+      .filter(a => {
+        // sólo mostrar alarmas del mes/año que no fueron pagadas
+        const fecha = new Date(`${a.fecha_alarma}T${a.hora}`);
+        const mesOk = !mes || fecha.getMonth() + 1 === mes;
+        const anioOk = !anio || fecha.getFullYear() === anio;
+        const noPagado = !serviciosPagadosDelMes.has(a.servicio.id_servicio);
+        return mesOk && anioOk && noPagado;
+      })
       .map(a => {
         const fecha = new Date(`${a.fecha_alarma}T${a.hora}`);
         return {
@@ -44,21 +71,10 @@ export class PagosService {
         };
       });
 
-    const pagosConvertidos = pagos.map(p => ({
-      nombre_servicio: p.servicio.nombre_servicio,
-      fecha: p.fecha_pago,
-      monto: p.monto,
-      estado: p.estado_pago, 
-      id_servicio: p.servicio.id_servicio,
-    }));
-
     return [...pagosConvertidos, ...alarmasNoPagadas];
   }
 
   async registrarPago(userId: number, dto: CrearPagoDto) {
-    console.log('DTO recibido:', dto);
-    console.log('Usuario:', userId);
-
     const nuevoPago = this.pagoRepository.create({
       usuario: { id_usuario: userId },
       servicio: { id_servicio: dto.id_servicio },

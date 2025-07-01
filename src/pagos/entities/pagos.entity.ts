@@ -1,10 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Usuario } from '../../users/user.entity';
 import { Servicio } from '../../servicios/servicios.entity';
-import { OneToMany } from 'typeorm';
 
 @Entity('Pagos')
-export class Pagos {
+export class Pago {
   @PrimaryGeneratedColumn({ name: 'id_pago' })
   id_pago: number;
 
@@ -17,14 +22,11 @@ export class Pagos {
   @Column({ name: 'estado_pago', type: 'varchar', length: 20 })
   estado_pago: string;
 
-  @ManyToOne(() => Usuario, usuario => usuario.pagos)
+  @ManyToOne(() => Usuario, (usuario) => usuario.pagos)
   @JoinColumn({ name: 'id_usuario' })
   usuario: Usuario;
 
-  @ManyToOne(() => Servicio, servicio => servicio.pagos)
+  @ManyToOne(() => Servicio, (servicio) => servicio.pagos)
   @JoinColumn({ name: 'id_servicio' })
   servicio: Servicio;
-
-  @OneToMany(() => Pagos, pago => pago.usuario)
-  pagos: Pagos[];
 }

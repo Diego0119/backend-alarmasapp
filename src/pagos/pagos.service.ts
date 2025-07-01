@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Pagos } from './entities/pagos.entity';
+import { Pago } from './entities/pagos.entity'; 
 import { Alarmas } from '../alarmas/alarm.entity';
 import { CrearPagoDto } from './dto/crear-pago.dto';
 
 @Injectable()
 export class PagosService {
   constructor(
-    @InjectRepository(Pagos)
-    private readonly pagoRepository: Repository<Pagos>,
+    @InjectRepository(Pago) 
+    private readonly pagoRepository: Repository<Pago>,
 
     @InjectRepository(Alarmas)
     private readonly alarmaRepository: Repository<Alarmas>,
@@ -28,7 +28,6 @@ export class PagosService {
 
     const ahora = new Date();
 
-    // Filtrar pagos por mes/año si corresponde
     const pagosFiltrados = pagos.filter(p => {
       if (!mes || !anio) return true;
       const fecha = new Date(p.fecha_pago);
@@ -38,7 +37,6 @@ export class PagosService {
       );
     });
 
-    // Extraer ID de servicios ya pagados en el mes/año seleccionado
     const serviciosPagadosDelMes = new Set(
       pagosFiltrados.map(p => p.servicio.id_servicio)
     );
@@ -53,7 +51,6 @@ export class PagosService {
 
     const alarmasNoPagadas = alarmas
       .filter(a => {
-        // sólo mostrar alarmas del mes/año que no fueron pagadas
         const fecha = new Date(`${a.fecha_alarma}T${a.hora}`);
         const mesOk = !mes || fecha.getMonth() + 1 === mes;
         const anioOk = !anio || fecha.getFullYear() === anio;

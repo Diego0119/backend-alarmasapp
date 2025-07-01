@@ -1,25 +1,29 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { Alarmas } from 'src/alarmas/alarm.entity';
-import { Pagos } from 'src/pagos/entities/pagos.entity';
-import { OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+} from 'typeorm';
+import { Alarmas } from '../alarmas/alarm.entity';
+import { Pago } from '../pagos/entities/pagos.entity';
 
 @Entity('Usuarios')
 export class Usuario {
   @PrimaryGeneratedColumn({ name: 'id_usuario' })
   id_usuario: number;
 
-  @Column({ name: 'nombre' })
+  @Column({ name: 'nombre', type: 'varchar', length: 100, nullable: true })
   nombre: string;
 
   @Column({ name: 'correo', unique: true })
   correo: string;
 
-  @Column({ name: 'contrasena' })
-  contrasena: string;
+  @Column({ name: 'contrasena', type: 'varchar', length: 255, nullable: true })
+  contrasena: string | null; 
 
-  @OneToMany(() => Alarmas, alarma => alarma.usuario)
+  @OneToMany(() => Alarmas, (alarma) => alarma.usuario)
   alarmas: Alarmas[];
 
-  @OneToMany(() => Pagos, pago => pago.usuario)
-  pagos: Pagos[];
+  @OneToMany(() => Pago, (pago) => pago.usuario)
+  pagos: Pago[];
 }

@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Alarmas } from '../alarmas/alarm.entity';
-import { Pagos } from '../pagos/entities/pagos.entity';
+import { Pago } from '../pagos/entities/pagos.entity';
 
 @Entity('Servicios')
 export class Servicio {
@@ -13,9 +13,9 @@ export class Servicio {
   @Column({ name: 'descripcion', type: 'text', nullable: true })
   descripcion: string;
 
-  @OneToMany(() => Alarmas, alarma => alarma.servicio)
+  @OneToMany(() => Alarmas, (alarma) => alarma.servicio)
   alarmas: Alarmas[];
 
-  @OneToMany(() => Pagos, pago => pago.servicio)
-  pagos: Pagos[];
+  @OneToMany(() => Pago, (pago) => pago.servicio) 
+  pagos: Pago[]; 
 }

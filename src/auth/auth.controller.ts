@@ -9,13 +9,16 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
-    console.log('Body recibido:', createUserDto);
     return this.authService.register(createUserDto);
   }
 
   @Post('login')
   async login(@Body() loginUserDto: LoginUserDto) {
-    console.log('Body recibido: ', loginUserDto);
     return this.authService.login(loginUserDto);
+  }
+
+  @Post('google')
+  async loginWithGoogle(@Body() body: { idToken: string }) {
+    return this.authService.loginWithGoogle(body.idToken);
   }
 }
